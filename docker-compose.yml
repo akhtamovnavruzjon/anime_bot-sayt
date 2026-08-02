@@ -41,7 +41,7 @@ services:
   bot:
     build: .
     container_name: anime_telegram_bot
-    command: python main.py
+    command: python bot.py
     volumes:
       - .:/app
     environment:
