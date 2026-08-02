@@ -1,5 +1,5 @@
 # Python 3.11 versiyasidan foydalanamiz
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Ishchi katalogini belgilaymiz
 WORKDIR /app
