@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ anime.title }} - Anime World{% endblock %}
+
+{% block content %}
+<div class="card bg-secondary bg-opacity-10 border-secondary p-4 rounded-4 shadow-lg text-white">
+    <div class="row g-4 align-items-center">
+        <!-- Poster Rasm -->
+        <div class="col-md-4 text-center">
+            {% if anime.poster %}
+                <img src="{{ anime.poster.url }}" class="img-fluid rounded-4 shadow" alt="{{ anime.title }}" style="max-height: 450px; width: 100%; object-fit: cover;">
+            {% else %}
+                <img src="https://via.placeholder.com/350x500" class="img-fluid rounded-4 shadow" alt="Rasm yo'q">
+            {% endif %}
+        </div>
+
+        <!-- Anime Ma'lumotlari -->
+        <div class="col-md-8">
+            <!-- Anime nomi (oq rangda) -->
+            <h1 class="fw-bold text-white mb-3">{{ anime.title }}</h1>
+
+            <!-- Janrlar -->
+            <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+                <span class="text-secondary fw-semibold">Janrlar:</span>
+                {% for genre in anime.genres.all %}
+                    <span class="badge bg-secondary text-white px-3 py-2 rounded-pill">{{ genre.name }}</span>
+                {% empty %}
+                    <span class="text-muted">Janr ko'rsatilmagan</span>
+                {% endfor %}
+            </div>
+
+            <!-- Bot kodi -->
+            <div class="my-4">
+                <span class="badge bg-warning text-dark fs-5 px-4 py-2 fw-bold rounded-3">
+                    Bot uchun anime kodi: {{ anime.code }}
+                </span>
+            </div>
+
+            <!-- Tavsif -->
+            <div class="mb-4">
+                <h6 class="text-secondary fw-semibold">Tavsif:</h6>
+                <p class="lead text-light fs-6">
+                    {% if anime.description %}
+                        {{ anime.description }}
+                    {% else %}
+                        Ushbu anime uchun tavsif berilmagan.
+                    {% endif %}
+                </p>
+            </div>
+
+            <hr class="border-secondary my-4">
+
+            <!-- Tugmalar -->
+            <div class="d-flex gap-3">
+                <a href="https://t.me/animes_worldBot?" target="_blank" class="btn btn-primary fw-bold px-4 py-2 rounded-3">
+                    Telegram botga o'tish
+                </a>
+                <!-- Orqaga tugmasi oddiy href="/" bilan almashtirildi -->
+                <a href="/" class="btn btn-outline-light fw-bold px-4 py-2 rounded-3">
+                    Orqaga
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

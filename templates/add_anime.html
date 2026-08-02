@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Yangi Anime Qo'shish - Anime World{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card bg-secondary bg-opacity-10 border-secondary p-4 rounded-4 shadow-lg text-white">
+
+            <h2 class="text-center text-white fw-bold mb-4">
+                ➕ Yangi Anime Qo'shish
+            </h2>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Anime Asosiy Ma'lumotlari -->
+                <h4 class="text-warning mb-3">📌 Asosiy ma'lumotlar</h4>
+
+                <div class="mb-3">
+                    <label class="form-label text-light fw-semibold">Anime Nomi</label>
+                    <input type="text" name="title" class="form-control bg-dark text-white border-secondary" placeholder="Masalan: Solo Leveling" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-light fw-semibold">Anime Kodi (Telegram Bot uchun)</label>
+                    <input type="number" name="code" class="form-control bg-dark text-white border-secondary" placeholder="Masalan: 12" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-light fw-semibold">Janrlar</label>
+                    <div class="p-3 bg-dark bg-opacity-50 border border-secondary rounded-3">
+                        {% for genre in genres %}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="genres" value="{{ genre.id }}" id="genre_{{ genre.id }}">
+                                <label class="form-check-label text-light" for="genre_{{ genre.id }}">
+                                    {{ genre.name }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-light fw-semibold">Web-sayt uchun Rasm (Poster)</label>
+                    <input type="file" name="poster" class="form-control bg-dark text-white border-secondary">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-light fw-semibold">Telegram Photo File ID (image_file_id)</label>
+                    <input type="text" name="image_file_id" class="form-control bg-dark text-white border-secondary" placeholder="Telegram bot uchun rasm file_id (ixtiyoriy)">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-light fw-semibold">Tavsifi</label>
+                    <textarea name="description" rows="4" class="form-control bg-dark text-white border-secondary" placeholder="Anime haqida qisqacha..."></textarea>
+                </div>
+
+                <hr class="border-secondary my-4">
+
+                <!-- QISMLAR VA FASLLAR BO'LIMI -->
+                <h4 class="text-warning mb-3">🎬 Qismlar va Fasllar</h4>
+
+                <div id="episodes-wrapper">
+                    <div class="episode-item card bg-dark border-secondary p-3 mb-3 rounded-3">
+                        <div class="row g-2 align-items-center">
+
+                            <!-- Fasl inputi -->
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-secondary border-secondary text-white fw-bold">Fasl:</span>
+                                    <input type="number" name="seasons[]" class="form-control bg-dark text-white border-secondary" value="1" min="1" required>
+                                </div>
+                            </div>
+
+                            <!-- Qism inputi -->
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-secondary border-secondary text-white fw-bold">Qism:</span>
+                                    <input type="number" name="episode_numbers[]" class="form-control bg-dark text-white border-secondary" value="1" min="1" required>
+                                </div>
+                            </div>
+
+                            <!-- Video File ID inputi -->
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-secondary border-secondary text-white fw-bold">File ID:</span>
+                                    <input type="text" name="file_ids[]" class="form-control bg-dark text-white border-secondary" placeholder="Telegram Video File ID" required>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" id="add-more-btn" class="btn btn-outline-info w-100 mb-4 rounded-3 fw-bold">
+                    ➕ Yana qism qo'shish
+                </button>
+
+                <!-- Saqlash tugmasi -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-bold">
+                        💾 Saqlash
+                    </button>
+                    <a href="/" class="btn btn-outline-light rounded-pill">
+                        Bekor qilish
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('add-more-btn').addEventListener('click', function() {
+        const wrapper = document.getElementById('episodes-wrapper');
+        const firstItem = wrapper.querySelector('.episode-item');
+
+        const newItem = firstItem.cloneNode(true);
+
+        const episodeInput = newItem.querySelector('input[name="episode_numbers[]"]');
+        const fileIdInput = newItem.querySelector('input[name="file_ids[]"]');
+
+        if (episodeInput) {
+            episodeInput.value = wrapper.children.length + 1;
+        }
+        if (fileIdInput) {
+            fileIdInput.value = '';
+        }
+
+        wrapper.appendChild(newItem);
+    });
+</script>
+{% endblock %}

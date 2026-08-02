@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Asosiy Sahifa - Anime World{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    {% for anime in animelar %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card anime-card h-100">
+                {% if anime.poster %}
+                    <img src="{{ anime.poster.url }}" class="card-img-top" alt="{{ anime.title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x400" class="card-img-top" alt="Rasm yo'q">
+                {% endif %}
+
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title text-truncate mb-3" title="{{ anime.title }}">{{ anime.title }}</h5>
+
+                    <div>
+                        <a href="{% url 'anime_detail' anime.pk %}" class="btn btn-anime w-100">
+                            ⓘ Batafsil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12 text-center text-muted py-5">
+            <h3>Hozircha hech qanday anime qo'shilmagan.</h3>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}
