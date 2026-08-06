@@ -43,3 +43,21 @@ class Episode(models.Model):
         verbose_name = "Qism"
         verbose_name_plural = "Qismlar"
         unique_together = ('anime', 'season', 'episode_number')
+
+
+
+
+
+
+class TelegramUser(models.Model):
+    telegram_id = models.BigIntegerField(unique=True, verbose_name="Telegram ID")
+    full_name = models.CharField(max_length=255, verbose_name="Ismi")
+    username = models.CharField(max_length=255, blank=True, null=True, verbose_name="Username")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Qo'shilgan vaqti")
+
+    def __str__(self):
+        return f"{self.full_name} ({self.telegram_id})"
+
+    class Meta:
+        verbose_name = "Telegram Foydalanuvchi"
+        verbose_name_plural = "Telegram Foydalanuvchilar"

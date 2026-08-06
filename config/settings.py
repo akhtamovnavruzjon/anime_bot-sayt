@@ -129,3 +129,16 @@ MEDIA_URL = '/media/'
 
 # Rasmlar kompyuteringiz/serveringizning qaysi papkasiga borib tushishi
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+import os
+from dotenv import load_dotenv
+
+# .env faylini yuklaymiz
+load_dotenv()
+
+# ADMIN_ID ni int (butun son) ko'rinishida olamiz
+ADMIN_ID = int(os.getenv("ADMIN_ID", 0))
+
+
+

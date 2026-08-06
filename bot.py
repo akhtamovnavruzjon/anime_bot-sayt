@@ -11,9 +11,11 @@ from asgiref.sync import sync_to_async
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import CommandStart
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from bot_app.models import Anime, Episode
+from bot_app.models import Anime, Episode,TelegramUser
 
 BOT_TOKEN = "8706869204:AAF-ZYMRvDaMSj_0kHxPyqtUOw2yVBJiNz8"
+ADMIN_ID = 7302808868
+
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -95,8 +97,37 @@ async def build_anime_keyboard(anime_id: int, current_season: int):
 # 1. /start buyrug'i
 @dp.message(CommandStart())
 async def start_handler(message: types.Message):
-    await message.answer(f"👋 Xush kelibsiz {message.from_user.full_name}!\n\n🎬 Anime kodi yuboring:")
+    user_id = message.from_user.id
+    full_name = message.from_user.full_name
+    username = f"@{message.from_user.username}" if message.from_user.username else "Mavjud emas"
 
+    # Foydalanuvchini bazadan izlaymiz, yo'q bo'lsa yangi yaratamiz
+    @sync_to_async
+    def get_or_create_user():
+        return TelegramUser.objects.get_or_create(
+            telegram_id=user_id,
+            defaults={
+                'full_name': full_name,
+                'username': message.from_user.username
+            }
+        )
+
+    user, created = await get_or_create_user()
+
+    # Agar yangi foydalanuvchi bo'lsa (created == True), adminga xabar yuboriladi
+    if created and ADMIN_ID:
+        admin_text = (
+            "🎉 **Yangi foydalanuvchi qo'shildi!**\n\n"
+            f"👤 **Ismi:** {full_name}\n"
+            f"🆔 **Username:** {username}\n"
+            f"🔢 **ID:** `{user_id}`"
+        )
+        try:
+            await bot.send_message(chat_id=ADMIN_ID, text=admin_text, parse_mode="Markdown")
+        except Exception as e:
+            logging.error(f"Adminga xabar yuborishda xatolik: {e}")
+
+    await message.answer(f"👋 Xush kelibsiz {full_name}!\n\n🎬 Anime kodi yuboring:")
 
 # 2. File ID'larni olish uchun handlerlar
 @dp.message(F.video)
