@@ -124,10 +124,11 @@ async def start_handler(message: types.Message):
         )
         try:
             await bot.send_message(chat_id=ADMIN_ID, text=admin_text, parse_mode="Markdown")
+            await message.answer(F"Botimizga xush kelibsiz {full_name}!\n\n🎬 Anime kodini yuboring:")
         except Exception as e:
             logging.error(f"Adminga xabar yuborishda xatolik: {e}")
 
-    await message.answer(f"👋 Xush kelibsiz {full_name}!\n\n🎬 Anime kodi yuboring:")
+    await message.answer(f"👋 Sizni yana ko'rib turganimizdan xursandmiz, xush kelibsiz {full_name}!\n\n🎬 Anime kodini yuboring:")
 
 # 2. File ID'larni olish uchun handlerlar
 @dp.message(F.video)
